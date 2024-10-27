@@ -3,9 +3,16 @@ from Organismo import Organismo
 
 class Animal(Organismo):
     def __init__(self, especie, nivelEnergia, velocidad, ubicacion):
+        super().__init__(
+            ubicacion=ubicacion,
+            nivel_energia=nivelEnergia,
+            edad=0,
+            peso=0,
+            estar_vivo=True
+        )
         self._especie = especie
-        super().__init__(ubicacion, nivelEnergia)
         self._velocidad = velocidad
+
 
     @property
     def especie(self):

@@ -56,3 +56,5 @@ class Organismo(ABC):
     @abstractmethod
     def reproducirse(self):
         pass
+
+
