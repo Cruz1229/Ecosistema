@@ -10,10 +10,10 @@ from Organismo import Organismo
 class Animal(Organismo):
     ENERGIA_MAXIMA = 100
     ENERGIA_MINIMA_MOVIMIENTO = 10
-    ENERGIA_MINIMA_REPRODUCCION = 40
-    COSTO_ENERGIA_REPRODUCCION = 30
-    DISTANCIA_REPRODUCCION = 50
-    PROBABILIDAD_REPRODUCCION = 0.2
+    ENERGIA_MINIMA_REPRODUCCION = 30
+    COSTO_ENERGIA_REPRODUCCION = 20
+    DISTANCIA_REPRODUCCION = 70
+    PROBABILIDAD_REPRODUCCION = 0.4
 
     def __init__(self, especie, nivelEnergia, velocidad, ubicacion):
         super().__init__(
@@ -106,7 +106,7 @@ class Animal(Organismo):
             print(f"Error en alimentarse: {str(e)}")
             return False
 
-    def reproducirse(self, otros_animales: List['Animal']) -> Optional['Animal']:
+    def reproducirse(self, otros_animales: List['Animal']):
         """
         Intenta reproducirse con otro animal de la misma especie si se cumplen las condiciones.
         """

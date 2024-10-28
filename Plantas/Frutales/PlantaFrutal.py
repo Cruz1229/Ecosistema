@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+
+from PlantaThread import EventoEcosistema
 from Plantas.Planta import Planta
 import random
 
@@ -40,6 +42,16 @@ class PlantaFrutal(Planta, ABC):
         # Calcular cantidad de frutos según la especie
         cantidad = self._calcular_produccion_frutos()
         self.frutos += cantidad
+
+        # Notificar al ecosistema sobre la generación de frutos
+        if hasattr(self, 'ecosistema') and self.ecosistema:
+            evento = EventoEcosistema(
+                tipo='generar_frutos',
+                origen=self,
+                destino=None,
+                datos={'cantidad': cantidad}
+            )
+            self.ecosistema.cola_eventos.put(evento)
 
         # Reiniciar tiempo entre producción
         self.tiempo_entre_frutos = 0
