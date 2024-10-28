@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.1">
+<title>Ecosistema API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>Ecosistema</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="Ecosistema.Ecosistema"><code class="flex name class">
+<span>class <span class="ident">Ecosistema</span></span>
+<span>(</span><span>tamano: Tuple[float, float] = (1000, 1000))</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Clase principal que maneja el ecosistema y sus entidades.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>tamano</code></strong> :&ensp;<code>Tuple[float, float]</code></dt>
+<dd>Tamaño del ecosistema.</dd>
+<dt><strong><code>carnivoros</code></strong> :&ensp;<code>Dict[str, List[Animal]]</code></dt>
+<dd>Diccionario de carnívoros por especie.</dd>
+<dt><strong><code>herbivoros</code></strong> :&ensp;<code>Dict[str, List[Animal]]</code></dt>
+<dd>Diccionario de herbívoros por especie.</dd>
+<dt><strong><code>plantas</code></strong> :&ensp;<code>Dict[str, List[Planta]]</code></dt>
+<dd>Diccionario de plantas por especie.</dd>
+<dt><strong><code>frutales</code></strong> :&ensp;<code>Dict[str, List[Planta]]</code></dt>
+<dd>Diccionario de plantas frutales por especie.</dd>
+<dt><strong><code>florales</code></strong> :&ensp;<code>Dict[str, List[Planta]]</code></dt>
+<dd>Diccionario de plantas florales por especie.</dd>
+<dt><strong><code>MIN_ANIMALES_POR_ESPECIE</code></strong> :&ensp;<code>int</code></dt>
+<dd>Mínimo de animales por especie.</dd>
+<dt><strong><code>threads</code></strong> :&ensp;<code>List[AnimalThread, PlantaThread]</code></dt>
+<dd>Lista de threads para entidades.</dd>
+<dt><strong><code>cola_eventos</code></strong> :&ensp;<code>Queue</code></dt>
+<dd>Cola para eventos del ecosistema.</dd>
+<dt><strong><code>thread_procesador</code></strong> :&ensp;<code>Thread</code></dt>
+<dd>Thread que procesa eventos.</dd>
+<dt><strong><code>lock</code></strong> :&ensp;<code>RLock</code></dt>
+<dd>Monitor para sincronización.</dd>
+<dt><strong><code>recursos</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Recursos disponibles en el ecosistema.</dd>
+</dl>
+<p>Inicializa un ecosistema con el tamaño especificado.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>tamano</code></strong> :&ensp;<code>Tuple[float, float]</code>, optional</dt>
+<dd>Tamaño del ecosistema.
+Por defecto es (1000, 1000).</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Ecosistema:
+    &#34;&#34;&#34;Clase principal que maneja el ecosistema y sus entidades.
+
+    Attributes:
+        tamano (Tuple[float, float]): Tamaño del ecosistema.
+        carnivoros (Dict[str, List[Animal]]): Diccionario de carnívoros por especie.
+        herbivoros (Dict[str, List[Animal]]): Diccionario de herbívoros por especie.
+        plantas (Dict[str, List[Planta]]): Diccionario de plantas por especie.
+        frutales (Dict[str, List[Planta]]): Diccionario de plantas frutales por especie.
+        florales (Dict[str, List[Planta]]): Diccionario de plantas florales por especie.
+        MIN_ANIMALES_POR_ESPECIE (int): Mínimo de animales por especie.
+        threads (List[AnimalThread, PlantaThread]): Lista de threads para entidades.
+        cola_eventos (Queue): Cola para eventos del ecosistema.
+        thread_procesador (Thread): Thread que procesa eventos.
+        lock (RLock): Monitor para sincronización.
+        recursos (dict): Recursos disponibles en el ecosistema.
+    &#34;&#34;&#34;
+
+    def __init__(self, tamano: Tuple[float, float] = (1000, 1000)):
+        &#34;&#34;&#34;Inicializa un ecosistema con el tamaño especificado.
+
+        Args:
+            tamano (Tuple[float, float], optional): Tamaño del ecosistema.
+                Por defecto es (1000, 1000).
+        &#34;&#34;&#34;
+        self.tamano = tamano
+        self.carnivoros: Dict[str, List[Animal]] = {}
+        self.herbivoros: Dict[str, List[Animal]] = {}
+        self.plantas: Dict[str, List[Planta]] = {}
+        self.frutales: Dict[str, List[Planta]] = {}
+        self.florales: Dict[str, List[Planta]] = {}
+
+        # Mínimo de animales por especie
+        self.MIN_ANIMALES_POR_ESPECIE = 2
+
+        # Control de threads
+        self.threads: List[AnimalThread, PlantaThread] = []
+        self.cola_eventos: Queue = Queue()
+        self.thread_procesador = threading.Thread(target=self.procesar_eventos)
+        self.thread_procesador.daemon = True
+        self.thread_procesador.start()
+
+        # Monitor para sincronización
+        self.lock = threading.RLock()
+
+        # Estado del ecosistema
+        self.recursos = {
+            &#39;agua&#39;: 100.0,
+            &#39;vegetacion&#39;: 100.0,
+            &#39;temperatura&#39;: 25.0,
+            &#39;humedad&#39;: 60.0
+        }
+
+    def verificar_poblacion_minima(self):
+        &#34;&#34;&#34;Verifica y mantiene la población mínima de cada especie.&#34;&#34;&#34;
+        with self.lock:
+            # Verificar carnívoros
+            for especie, lista in self.carnivoros.items():
+                animales_vivos = [a for a in lista if a.estar_vivo]
+                if len(animales_vivos) &lt; self.MIN_ANIMALES_POR_ESPECIE:
+                    self.repoblar_especie(especie, self.MIN_ANIMALES_POR_ESPECIE - len(animales_vivos))
+
+            # Verificar herbívoros
+            for especie, lista in self.herbivoros.items():
+                animales_vivos = [a for a in lista if a.estar_vivo]
+                if len(animales_vivos) &lt; self.MIN_ANIMALES_POR_ESPECIE:
+                    self.repoblar_especie(especie, self.MIN_ANIMALES_POR_ESPECIE - len(animales_vivos))
+
+    def repoblar_especie(self, especie: str, cantidad: int):
+        &#34;&#34;&#34;Repobla una especie específica con la cantidad indicada.
+
+        Args:
+            especie (str): Nombre de la especie a repoblar.
+            cantidad (int): Cantidad de animales a agregar.
+        &#34;&#34;&#34;
+        for _ in range(cantidad):
+            # Generar posición aleatoria
+            x = random.uniform(0, self.tamano[0])
+            y = random.uniform(0, self.tamano[1])
+
+            # Crear nuevo animal según la especie
+            nuevo_animal = None
+            tipo = &#39;&#39;
+
+            if especie == &#39;Leon&#39;:
+                nuevo_animal = Leon(&#34;Leon&#34;, 100, 2.0, (x, y))
+                tipo = &#39;carnivoro&#39;
+            elif especie == &#39;Aguila_real&#39;:
+                nuevo_animal = Aguila_real(&#34;Aguila&#34;, 100, 3.0, (x, y))
+                tipo = &#39;carnivoro&#39;
+            elif especie == &#39;Conejo&#39;:
+                nuevo_animal = Conejo(&#34;Conejo&#34;, 100, 4.0, (x, y))
+                tipo = &#39;herbivoro&#39;
+            elif especie == &#39;Ciervo&#39;:
+                nuevo_animal = Ciervo(&#34;Ciervo&#34;, 100, 3.0, (x, y))
+                tipo = &#39;herbivoro&#39;
+
+            if nuevo_animal:
+                self.agregar_entidad(nuevo_animal, tipo)
+
+    def agregar_entidad(self, entidad: ABC, tipo: str) -&gt; bool:
+        &#34;&#34;&#34;Agrega una nueva entidad al ecosistema y crea su thread si es un animal.
+
+        Args:
+            entidad (ABC): Entidad a agregar al ecosistema.
+            tipo (str): Tipo de la entidad (&#39;carnivoro&#39;, &#39;herbivoro&#39;, &#39;frutal&#39;, &#39;floral&#39;).
+
+        Returns:
+            bool: True si la entidad fue agregada exitosamente, False en caso contrario.
+        &#34;&#34;&#34;
+        with self.lock:
+            try:
+                # Agregar la entidad a la lista correspondiente
+                if tipo == &#39;carnivoro&#39;:
+                    especie = entidad.__class__.__name__
+                    if especie not in self.carnivoros:
+                        self.carnivoros[especie] = []
+                    self.carnivoros[especie].append(entidad)
+                    # Crear y comenzar thread para el carnívoro
+                    thread = AnimalThread(entidad, self)
+                    self.threads.append(thread)
+                    thread.start()
+
+                elif tipo == &#39;herbivoro&#39;:
+                    especie = entidad.__class__.__name__
+                    if especie not in self.herbivoros:
+                        self.herbivoros[especie] = []
+                    self.herbivoros[especie].append(entidad)
+                    # Crear y comenzar thread para el herbívoro
+                    thread = AnimalThread(entidad, self)
+                    self.threads.append(thread)
+                    thread.start()
+
+                elif tipo == &#39;frutal&#39;:
+                    especie = entidad.__class__.__name__
+                    if especie not in self.frutales:
+                        self.frutales[especie] = []
+                    self.frutales[especie].append(entidad)
+                    thread = PlantaThread(entidad, self)
+                    self.threads.append(thread)
+                    thread.start()
+
+                elif tipo == &#39;floral&#39;:
+                    especie = entidad.__class__.__name__
+                    if especie not in self.florales:
+                        self.florales[especie] = []
+                    self.florales[especie].append(entidad)
+                    thread = PlantaThread(entidad, self)
+                    self.threads.append(thread)
+                    thread.start()
+
+                return True
+            except Exception as e:
+                print(f&#34;Error al agregar entidad: {str(e)}&#34;)
+                return False
+
+    def procesar_eventos(self):
+        &#34;&#34;&#34;Procesa los eventos generados por los threads de los animales.&#34;&#34;&#34;
+        while True:
+            evento = self.cola_eventos.get()
+            with self.lock:
+                try:
+                    if evento.tipo == &#39;buscar_alimento&#39;:
+                        self.procesar_busqueda_alimento(evento)
+                    elif evento.tipo == &#39;mover&#39;:
+                        self.procesar_movimiento(evento)
+                    elif evento.tipo == &#39;descansar&#39;:
+                        self.procesar_descanso(evento)
+                    elif evento.tipo == &#39;interactuar&#39;:
+                        self.procesar_interaccion(evento)
+                    elif evento.tipo == &#39;absorber_agua&#39;:
+                        self.procesar_absorcion_agua(evento)
+                    elif evento.tipo == &#39;crecer&#39;:
+                        self.procesar_crecimiento(evento)
+                    elif evento.tipo == &#39;generar_frutos&#39;:
+                        self.procesar_generacion_frutos(evento)
+                    elif evento.tipo == &#39;reproducir_planta&#39;:
+                        self.procesar_reproduccion_planta(evento)
+                except Exception as e:
+                    print(f&#34;Error al procesar evento: {str(e)}&#34;)
+
+    # Procesadores de eventos
+    def procesar_busqueda_alimento(self, evento: EventoEcosistema):
+        &#34;&#34;&#34;Procesa el evento de búsqueda de alimento.
+
+        Args:
+            evento (EventoEcosistema): Evento a procesar.
+        &#34;&#34;&#34;
+        pass  # Implementación de la lógica
+
+    def procesar_movimiento(self, evento: EventoEcosistema):
+        &#34;&#34;&#34;Procesa el evento de movimiento.
+
+        Args:
+            evento (EventoEcosistema): Evento a procesar.
+        &#34;&#34;&#34;
+        pass  # Implementación de la lógica
+
+    def procesar_descanso(self, evento: EventoEcosistema):
+        &#34;&#34;&#34;Procesa el evento de descanso.
+
+        Args:
+            evento (EventoEcosistema): Evento a procesar.
+        &#34;&#34;&#34;
+        pass  # Implementación de la lógica
+
+    def procesar_interaccion(self, evento: EventoEcosistema):
+        &#34;&#34;&#34;Procesa el evento de interacción.
+
+        Args:
+            evento (EventoEcosistema): Evento a procesar.
+        &#34;&#34;&#34;
+        pass  # Implementación de la lógica
+
+    def procesar_absorcion_agua(self, evento: EventoEcosistema):
+        &#34;&#34;&#34;Procesa el evento de absorción de agua.
+
+        Args:
+            evento (EventoEcosistema): Evento a procesar.
+        &#34;&#34;&#34;
+        pass  # Implementación de la lógica
+
+    def procesar_crecimiento(self, evento: EventoEcosistema):
+        &#34;&#34;&#34;Procesa el evento de crecimiento.
+
+        Args:
+            evento (EventoEcosistema): Evento a procesar.
+        &#34;&#34;&#34;
+        pass  # Implementación de la lógica
+
+    def procesar_generacion_frutos(self, evento: EventoEcosistema):
+        &#34;&#34;&#34;Procesa el evento de generación de frutos.
+
+        Args:
+            evento (EventoEcosistema): Evento a procesar.
+        &#34;&#34;&#34;
+        pass  # Implementación de la lógica
+
+    def procesar_reproduccion_planta(self, evento: EventoEcosistema):
+        &#34;&#34;&#34;Procesa el evento de reproducción de planta.
+
+        Args:
+            evento (EventoEcosistema): Evento a procesar.
+        &#34;&#34;&#34;
+        pass  # Implementación de la lógica</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="Ecosistema.Ecosistema.agregar_entidad"><code class="name flex">
+<span>def <span class="ident">agregar_entidad</span></span>(<span>self, entidad: abc.ABC, tipo: str) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Agrega una nueva entidad al ecosistema y crea su thread si es un animal.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>entidad</code></strong> :&ensp;<code>ABC</code></dt>
+<dd>Entidad a agregar al ecosistema.</dd>
+<dt><strong><code>tipo</code></strong> :&ensp;<code>str</code></dt>
+<dd>Tipo de la entidad ('carnivoro', 'herbivoro', 'frutal', 'floral').</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True si la entidad fue agregada exitosamente, False en caso contrario.</dd>
+</dl></div>
+</dd>
+<dt id="Ecosistema.Ecosistema.procesar_absorcion_agua"><code class="name flex">
+<span>def <span class="ident">procesar_absorcion_agua</span></span>(<span>self, evento: <a title="Ecosistema.EventoEcosistema" href="#Ecosistema.EventoEcosistema">EventoEcosistema</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Procesa el evento de absorción de agua.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>evento</code></strong> :&ensp;<code><a title="Ecosistema.EventoEcosistema" href="#Ecosistema.EventoEcosistema">EventoEcosistema</a></code></dt>
+<dd>Evento a procesar.</dd>
+</dl></div>
+</dd>
+<dt id="Ecosistema.Ecosistema.procesar_busqueda_alimento"><code class="name flex">
+<span>def <span class="ident">procesar_busqueda_alimento</span></span>(<span>self, evento: <a title="Ecosistema.EventoEcosistema" href="#Ecosistema.EventoEcosistema">EventoEcosistema</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Procesa el evento de búsqueda de alimento.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>evento</code></strong> :&ensp;<code><a title="Ecosistema.EventoEcosistema" href="#Ecosistema.EventoEcosistema">EventoEcosistema</a></code></dt>
+<dd>Evento a procesar.</dd>
+</dl></div>
+</dd>
+<dt id="Ecosistema.Ecosistema.procesar_crecimiento"><code class="name flex">
+<span>def <span class="ident">procesar_crecimiento</span></span>(<span>self, evento: <a title="Ecosistema.EventoEcosistema" href="#Ecosistema.EventoEcosistema">EventoEcosistema</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Procesa el evento de crecimiento.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>evento</code></strong> :&ensp;<code><a title="Ecosistema.EventoEcosistema" href="#Ecosistema.EventoEcosistema">EventoEcosistema</a></code></dt>
+<dd>Evento a procesar.</dd>
+</dl></div>
+</dd>
+<dt id="Ecosistema.Ecosistema.procesar_descanso"><code class="name flex">
+<span>def <span class="ident">procesar_descanso</span></span>(<span>self, evento: <a title="Ecosistema.EventoEcosistema" href="#Ecosistema.EventoEcosistema">EventoEcosistema</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Procesa el evento de descanso.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>evento</code></strong> :&ensp;<code><a title="Ecosistema.EventoEcosistema" href="#Ecosistema.EventoEcosistema">EventoEcosistema</a></code></dt>
+<dd>Evento a procesar.</dd>
+</dl></div>
+</dd>
+<dt id="Ecosistema.Ecosistema.procesar_eventos"><code class="name flex">
+<span>def <span class="ident">procesar_eventos</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Procesa los eventos generados por los threads de los animales.</p></div>
+</dd>
+<dt id="Ecosistema.Ecosistema.procesar_generacion_frutos"><code class="name flex">
+<span>def <span class="ident">procesar_generacion_frutos</span></span>(<span>self, evento: <a title="Ecosistema.EventoEcosistema" href="#Ecosistema.EventoEcosistema">EventoEcosistema</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Procesa el evento de generación de frutos.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>evento</code></strong> :&ensp;<code><a title="Ecosistema.EventoEcosistema" href="#Ecosistema.EventoEcosistema">EventoEcosistema</a></code></dt>
+<dd>Evento a procesar.</dd>
+</dl></div>
+</dd>
+<dt id="Ecosistema.Ecosistema.procesar_interaccion"><code class="name flex">
+<span>def <span class="ident">procesar_interaccion</span></span>(<span>self, evento: <a title="Ecosistema.EventoEcosistema" href="#Ecosistema.EventoEcosistema">EventoEcosistema</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Procesa el evento de interacción.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>evento</code></strong> :&ensp;<code><a title="Ecosistema.EventoEcosistema" href="#Ecosistema.EventoEcosistema">EventoEcosistema</a></code></dt>
+<dd>Evento a procesar.</dd>
+</dl></div>
+</dd>
+<dt id="Ecosistema.Ecosistema.procesar_movimiento"><code class="name flex">
+<span>def <span class="ident">procesar_movimiento</span></span>(<span>self, evento: <a title="Ecosistema.EventoEcosistema" href="#Ecosistema.EventoEcosistema">EventoEcosistema</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Procesa el evento de movimiento.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>evento</code></strong> :&ensp;<code><a title="Ecosistema.EventoEcosistema" href="#Ecosistema.EventoEcosistema">EventoEcosistema</a></code></dt>
+<dd>Evento a procesar.</dd>
+</dl></div>
+</dd>
+<dt id="Ecosistema.Ecosistema.procesar_reproduccion_planta"><code class="name flex">
+<span>def <span class="ident">procesar_reproduccion_planta</span></span>(<span>self, evento: <a title="Ecosistema.EventoEcosistema" href="#Ecosistema.EventoEcosistema">EventoEcosistema</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Procesa el evento de reproducción de planta.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>evento</code></strong> :&ensp;<code><a title="Ecosistema.EventoEcosistema" href="#Ecosistema.EventoEcosistema">EventoEcosistema</a></code></dt>
+<dd>Evento a procesar.</dd>
+</dl></div>
+</dd>
+<dt id="Ecosistema.Ecosistema.repoblar_especie"><code class="name flex">
+<span>def <span class="ident">repoblar_especie</span></span>(<span>self, especie: str, cantidad: int)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Repobla una especie específica con la cantidad indicada.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>especie</code></strong> :&ensp;<code>str</code></dt>
+<dd>Nombre de la especie a repoblar.</dd>
+<dt><strong><code>cantidad</code></strong> :&ensp;<code>int</code></dt>
+<dd>Cantidad de animales a agregar.</dd>
+</dl></div>
+</dd>
+<dt id="Ecosistema.Ecosistema.verificar_poblacion_minima"><code class="name flex">
+<span>def <span class="ident">verificar_poblacion_minima</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Verifica y mantiene la población mínima de cada especie.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="Ecosistema.EventoEcosistema"><code class="flex name class">
+<span>class <span class="ident">EventoEcosistema</span></span>
+<span>(</span><span>tipo: str, origen: Optional[object], destino: Optional[object], datos: dict)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Clase para representar un evento en el ecosistema.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>tipo</code></strong> :&ensp;<code>str</code></dt>
+<dd>Tipo de evento.</dd>
+<dt><strong><code>origen</code></strong> :&ensp;<code>Optional[object]</code></dt>
+<dd>Entidad que genera el evento.</dd>
+<dt><strong><code>destino</code></strong> :&ensp;<code>Optional[object]</code></dt>
+<dd>Entidad que es el destino del evento.</dd>
+<dt><strong><code>datos</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Información adicional sobre el evento.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class EventoEcosistema:
+    &#34;&#34;&#34;Clase para representar un evento en el ecosistema.
+
+    Attributes:
+        tipo (str): Tipo de evento.
+        origen (Optional[object]): Entidad que genera el evento.
+        destino (Optional[object]): Entidad que es el destino del evento.
+        datos (dict): Información adicional sobre el evento.
+    &#34;&#34;&#34;
+    tipo: str
+    origen: Optional[object]
+    destino: Optional[object]
+    datos: dict</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="Ecosistema.EventoEcosistema.datos"><code class="name">var <span class="ident">datos</span> : dict</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="Ecosistema.EventoEcosistema.destino"><code class="name">var <span class="ident">destino</span> : Optional[object]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="Ecosistema.EventoEcosistema.origen"><code class="name">var <span class="ident">origen</span> : Optional[object]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="Ecosistema.EventoEcosistema.tipo"><code class="name">var <span class="ident">tipo</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="Ecosistema.Ecosistema" href="#Ecosistema.Ecosistema">Ecosistema</a></code></h4>
+<ul class="">
+<li><code><a title="Ecosistema.Ecosistema.agregar_entidad" href="#Ecosistema.Ecosistema.agregar_entidad">agregar_entidad</a></code></li>
+<li><code><a title="Ecosistema.Ecosistema.procesar_absorcion_agua" href="#Ecosistema.Ecosistema.procesar_absorcion_agua">procesar_absorcion_agua</a></code></li>
+<li><code><a title="Ecosistema.Ecosistema.procesar_busqueda_alimento" href="#Ecosistema.Ecosistema.procesar_busqueda_alimento">procesar_busqueda_alimento</a></code></li>
+<li><code><a title="Ecosistema.Ecosistema.procesar_crecimiento" href="#Ecosistema.Ecosistema.procesar_crecimiento">procesar_crecimiento</a></code></li>
+<li><code><a title="Ecosistema.Ecosistema.procesar_descanso" href="#Ecosistema.Ecosistema.procesar_descanso">procesar_descanso</a></code></li>
+<li><code><a title="Ecosistema.Ecosistema.procesar_eventos" href="#Ecosistema.Ecosistema.procesar_eventos">procesar_eventos</a></code></li>
+<li><code><a title="Ecosistema.Ecosistema.procesar_generacion_frutos" href="#Ecosistema.Ecosistema.procesar_generacion_frutos">procesar_generacion_frutos</a></code></li>
+<li><code><a title="Ecosistema.Ecosistema.procesar_interaccion" href="#Ecosistema.Ecosistema.procesar_interaccion">procesar_interaccion</a></code></li>
+<li><code><a title="Ecosistema.Ecosistema.procesar_movimiento" href="#Ecosistema.Ecosistema.procesar_movimiento">procesar_movimiento</a></code></li>
+<li><code><a title="Ecosistema.Ecosistema.procesar_reproduccion_planta" href="#Ecosistema.Ecosistema.procesar_reproduccion_planta">procesar_reproduccion_planta</a></code></li>
+<li><code><a title="Ecosistema.Ecosistema.repoblar_especie" href="#Ecosistema.Ecosistema.repoblar_especie">repoblar_especie</a></code></li>
+<li><code><a title="Ecosistema.Ecosistema.verificar_poblacion_minima" href="#Ecosistema.Ecosistema.verificar_poblacion_minima">verificar_poblacion_minima</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="Ecosistema.EventoEcosistema" href="#Ecosistema.EventoEcosistema">EventoEcosistema</a></code></h4>
+<ul class="">
+<li><code><a title="Ecosistema.EventoEcosistema.datos" href="#Ecosistema.EventoEcosistema.datos">datos</a></code></li>
+<li><code><a title="Ecosistema.EventoEcosistema.destino" href="#Ecosistema.EventoEcosistema.destino">destino</a></code></li>
+<li><code><a title="Ecosistema.EventoEcosistema.origen" href="#Ecosistema.EventoEcosistema.origen">origen</a></code></li>
+<li><code><a title="Ecosistema.EventoEcosistema.tipo" href="#Ecosistema.EventoEcosistema.tipo">tipo</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.1</a>.</p>
+</footer>
+</body>
+</html>

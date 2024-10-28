@@ -594,9 +594,7 @@ class EcosistemaGUI(QMainWindow):
             left_layout = QVBoxLayout()
 
             self.btn_guardar = QPushButton("Guardar Estado")
-            self.btn_guardar.clicked.connect(self.guardar_estado)
             self.btn_cargar = QPushButton("Cargar Estado")
-            self.btn_cargar.clicked.connect(self.mostrar_dialogo_cargar)
 
             # Panel superior con información
             info_panel = QHBoxLayout()
