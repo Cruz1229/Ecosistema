@@ -209,9 +209,9 @@ class EcosistemaGUI(QMainWindow):
         self.planta_items = []
 
         # Parámetros para plantas
-        self.TIEMPO_MINIMO_REPRODUCCION_PLANTAS = 800
-        self.PROBABILIDAD_REPRODUCCION_PLANTAS = 0.1
-        self.DISTANCIA_REPRODUCCION_PLANTAS = 100
+        self.TIEMPO_MINIMO_REPRODUCCION_PLANTAS = 10000000
+        self.PROBABILIDAD_REPRODUCCION_PLANTAS = 0.001
+        self.DISTANCIA_REPRODUCCION_PLANTAS = 170
 
         # Representaciones gráficas de los animales
         self.animal_items = []
@@ -246,11 +246,6 @@ class EcosistemaGUI(QMainWindow):
 
         # Lista para plantas
         self.planta_items = []
-
-        # Parámetros para plantas
-        self.TIEMPO_MINIMO_REPRODUCCION_PLANTAS = 800
-        self.PROBABILIDAD_REPRODUCCION_PLANTAS = 0.1
-        self.DISTANCIA_REPRODUCCION_PLANTAS = 100
 
     def verificar_cazas(self):
         """Verifica y procesa las cazas entre depredadores y presas"""
@@ -450,6 +445,70 @@ class EcosistemaGUI(QMainWindow):
                 item = AnimalGraphicsItem(animal, self.imagenes_animales[animal.__class__.__name__])
                 self.animal_items.append(item)
 
+    def verificar_reproduccion_plantas(self):
+        nuevas_plantas = []
+
+        for i, item1 in enumerate(self.planta_items):
+            if not item1.planta.estar_vivo:
+                continue
+
+            # Incrementar el tiempo de reproducción
+            item1.tiempo_reproduccion += 1
+
+            # Verificar si la planta puede reproducirse
+            if random.random() < self.PROBABILIDAD_REPRODUCCION_PLANTAS:
+                # Generar nueva posición cerca de la planta madre
+                radio = self.DISTANCIA_REPRODUCCION_PLANTAS
+                angulo = random.uniform(0, 2 * math.pi)
+
+                pos_x = item1.x + radio * math.cos(angulo)
+                pos_y = item1.y + radio * math.sin(angulo)
+
+                # Mantener dentro de los límites
+                pos_x = max(0, min(self.ANCHO_ECOSISTEMA, pos_x))
+                pos_y = max(0, min(self.ALTO_ECOSISTEMA, pos_y))
+
+                # Crear nueva planta según la especie
+                nueva_planta = None
+                tipo = None
+
+                if isinstance(item1.planta, Manzano):
+                    nueva_planta = Manzano(0.5, 0, (pos_x, pos_y), 100, 100)
+                    tipo = 'frutal'
+                elif isinstance(item1.planta, Naranjo):
+                    nueva_planta = Naranjo(0.5, 0, (pos_x, pos_y), 100, 100)
+                    tipo = 'frutal'
+                elif isinstance(item1.planta, Peral):
+                    nueva_planta = Peral(0.5, 0, (pos_x, pos_y), 100, 100)
+                    tipo = 'frutal'
+                elif isinstance(item1.planta, Rosal):
+                    nueva_planta = Rosal(0.3, 0, (pos_x, pos_y), 100, 100)
+                    tipo = 'floral'
+                elif isinstance(item1.planta, Orquidero):
+                    nueva_planta = Orquidero(0.3, 0, (pos_x, pos_y), 100, 100)
+                    tipo = 'floral'
+                elif isinstance(item1.planta, Cempasuchil):
+                    nueva_planta = Cempasuchil(0.3, 0, (pos_x, pos_y), 100, 100)
+                    tipo = 'floral'
+
+                if nueva_planta and tipo:
+                    nuevas_plantas.append((nueva_planta, tipo))
+                    # Mensaje
+                    self.lbl_estado.setText(f"Estado: Nueva {nueva_planta.__class__.__name__} ha brotado!")
+                    self.registrar_accion(
+                        nueva_planta.__class__.__name__,
+                        "Reproducción",
+                        "Nueva planta ha brotado"
+                    )
+
+        # Agregar nuevas plantas al ecosistema
+        for planta, tipo in nuevas_plantas:
+            self.ecosistema.agregar_entidad(planta, tipo)
+            especie = planta.__class__.__name__
+            if especie in self.imagenes_plantas:
+                item = PlantaGraphicsItem(planta, self.imagenes_plantas[especie])
+                self.planta_items.append(item)
+
     def mostrar_estadisticas(self):
         """Actualiza y muestra las estadísticas del ecosistema"""
         conteo_especies = {}
@@ -467,6 +526,11 @@ class EcosistemaGUI(QMainWindow):
         # Calcular promedios de energía
         for especie in energia_promedio:
             energia_promedio[especie] = sum(energia_promedio[especie]) / len(energia_promedio[especie])
+
+        for item in self.planta_items:
+            if item.planta.estar_vivo:
+                especie = item.planta.__class__.__name__
+                conteo_especies[especie] = conteo_especies.get(especie, 0) + 1
 
         # Actualizar etiquetas
         stats_text = "Población: "
@@ -548,7 +612,7 @@ class EcosistemaGUI(QMainWindow):
             right_layout = QVBoxLayout(right_widget)
 
             # Etiqueta para el panel lateral
-            lbl_animales = QLabel("Animales Vivos")
+            lbl_animales = QLabel("Entidades Vivas")
             lbl_animales.setAlignment(Qt.AlignmentFlag.AlignCenter)
             right_layout.addWidget(lbl_animales)
 
@@ -584,6 +648,8 @@ class EcosistemaGUI(QMainWindow):
     def actualizar_lista_animales(self):
         """Actualiza la lista de animales vivos en el panel lateral"""
         self.lista_animales.clear()
+        self.lista_animales.addItem("====== ANIMALES ======")
+        self.lista_animales.addItem("")
 
         # Diccionario para agrupar animales por especie
         animales_por_especie = {}
@@ -602,6 +668,34 @@ class EcosistemaGUI(QMainWindow):
             self.lista_animales.addItem(f"=== {especie}s ({len(energias)}) ===")
 
             # Agregar cada animal con su energía
+            for i, energia in enumerate(energias, 1):
+                self.lista_animales.addItem(
+                    f"  {especie} {i} - Energía: {energia:.1f}%"
+                )
+
+            # Agregar espacio entre especies
+            self.lista_animales.addItem("")
+
+        # SECCIÓN DE PLANTAS (fuera del bucle de animales)
+        self.lista_animales.addItem("====== PLANTAS ======")
+        self.lista_animales.addItem("")
+
+        # Diccionario para agrupar plantas por especie
+        plantas_por_especie = {}
+        for item in self.planta_items:
+            if item.planta.estar_vivo:
+                especie = item.planta.__class__.__name__
+                energia = item.planta.nivel_energia
+                if especie not in plantas_por_especie:
+                    plantas_por_especie[especie] = []
+                plantas_por_especie[especie].append(energia)
+
+        # Agregar elementos de plantas a la lista agrupados por especie
+        for especie, energias in plantas_por_especie.items():
+            # Agregar encabezado de especie
+            self.lista_animales.addItem(f"=== {especie}s ({len(energias)}) ===")
+
+            # Agregar cada planta con su energía
             for i, energia in enumerate(energias, 1):
                 self.lista_animales.addItem(
                     f"  {especie} {i} - Energía: {energia:.1f}%"
@@ -687,6 +781,9 @@ class EcosistemaGUI(QMainWindow):
 
             # Lista para almacenar nuevos animales
             nuevos_animales = []
+
+            self.verificar_reproduccion_plantas()  # Agregar esta línea
+
 
             for item in self.planta_items[:]:
                 if item.planta.estar_vivo:
