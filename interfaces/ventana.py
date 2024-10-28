@@ -2,14 +2,16 @@ import math
 
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                              QPushButton, QGraphicsScene, QGraphicsView,
-                             QMessageBox, QLabel, QHBoxLayout)
+                             QMessageBox, QLabel, QHBoxLayout, QListWidget, QSplitter, QFrame)
 from PyQt6.QtGui import QPixmap, QBrush, QPen, QColor
-from PyQt6.QtCore import Qt, QTimer, QRectF
+from PyQt6.QtCore import Qt, QTimer, QRectF, QTime
 import sys
 import os
 import random
 from typing import Dict, List
 from Animales.Carnivoros.Carnivoro import Carnivoro
+from Animales.Habilidades.Nadador import Nadador
+from Animales.Habilidades.Volador import Volador
 from Animales.Herbivoros.Herbivoro import Herbivoro
 from Ecosistema import Ecosistema
 from Animales.Animal import Animal
@@ -17,6 +19,13 @@ from Animales.Carnivoros.Leon import Leon
 from Animales.Carnivoros.Aguila_real import Aguila_real
 from Animales.Herbivoros.Conejo import Conejo
 from Animales.Herbivoros.Ciervo import Ciervo
+from Plantas.Florales.Cempasuchil import Cempasuchil
+from Plantas.Florales.Orquidero import Orquidero
+from Plantas.Florales.Rosal import Rosal
+from Plantas.Frutales.Manzano import Manzano
+from Plantas.Frutales.Naranjo import Naranjo
+from Plantas.Frutales.Peral import Peral
+
 
 class AnimalGraphicsItem:
     """Clase para manejar la representación gráfica de cada animal"""
@@ -101,6 +110,44 @@ class AnimalGraphicsItem:
     def y(self):
         return self.animal.ubicacion[1] if self.animal else 0
 
+class PlantaGraphicsItem:
+    """Clase para manejar la representación gráfica de cada planta"""
+    def __init__(self, planta: 'Planta', imagen_path: str):
+        self.planta = planta
+        self.imagen_path = imagen_path
+        self.pixmap = None
+        self.cargar_imagen()
+        self.tiempo_crecimiento = 0
+        self.tiempo_reproduccion = 0
+
+    def cargar_imagen(self):
+        try:
+            if os.path.exists(self.imagen_path):
+                # Escalar según la altura de la planta
+                tamano_base = 30
+                factor_escala = min(2.0, max(1.0, self.planta.altura))
+                tamano = int(tamano_base * factor_escala)
+
+                self.pixmap = QPixmap(self.imagen_path).scaled(
+                    tamano, tamano,
+                    Qt.AspectRatioMode.KeepAspectRatio
+                )
+            else:
+                self.pixmap = QPixmap(30, 30)
+                self.pixmap.fill(QColor(34, 139, 34))  # Verde forestal por defecto
+        except Exception as e:
+            print(f"Error al cargar imagen {self.imagen_path}: {str(e)}")
+            self.pixmap = QPixmap(30, 30)
+            self.pixmap.fill(QColor(0, 255, 0))
+
+    @property
+    def x(self):
+        return self.planta.ubicacion[0] if self.planta else 0
+
+    @property
+    def y(self):
+        return self.planta.ubicacion[1] if self.planta else 0
+
 class EcosistemaGUI(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -115,7 +162,7 @@ class EcosistemaGUI(QMainWindow):
         # Parámetros de reproducción ajustados
         self.TIEMPO_MINIMO_REPRODUCCION = 500  # Aumentado significativamente
         self.PROBABILIDAD_REPRODUCCION = 0.2  # 20% de probabilidad cuando se cumplan las condiciones
-        self.ENERGIA_MINIMA_REPRODUCCION = 70  # Energía mínima necesaria para reproducirse
+        self.ENERGIA_MINIMA_REPRODUCCION = 30  # Energía mínima necesaria para reproducirse
         self.COSTO_ENERGIA_REPRODUCCION = 30  # Energía que cuesta reproducirse
 
         # Contadores de tiempo específicos por especie
@@ -148,17 +195,62 @@ class EcosistemaGUI(QMainWindow):
             'Tapir': 'imagenes/tapir.png'
         }
 
+        self.imagenes_plantas: Dict[str, str] = {
+            'Manzano': 'imagenes/manzano.png',
+            'Naranjo': 'imagenes/naranjo.png',
+            'Peral': 'imagenes/peral.png',
+            'Rosal': 'imagenes/rosal.png',
+            'Orquidero': 'imagenes/orquidero.png',
+            'Cempasuchil': 'imagenes/cempasuchil.png'
+
+        }
+
+        # Lista para plantas
+        self.planta_items = []
+
+        # Parámetros para plantas
+        self.TIEMPO_MINIMO_REPRODUCCION_PLANTAS = 800
+        self.PROBABILIDAD_REPRODUCCION_PLANTAS = 0.1
+        self.DISTANCIA_REPRODUCCION_PLANTAS = 100
+
         # Representaciones gráficas de los animales
         self.animal_items = []
 
         # Timer para actualizar la visualización
         self.timer = None
 
+        # Agregar lista de animales
+        self.lista_animales = QListWidget()
+        self.lista_animales.setMaximumWidth(300)  # Ancho máximo del panel lateral
+
+        # Agregar lista para registrar acciones
+        self.lista_acciones = QListWidget()
+        self.lista_acciones.setMaximumHeight(200)  # Limitar altura del registro
+        self.max_acciones = 100  # Máximo número de acciones a mostrar
+
         # Configurar la interfaz
         self.setup_ui()
 
         # Verificar directorio de imágenes
         self.verificar_directorio_imagenes()
+
+        self.imagenes_plantas: Dict[str, str] = {
+            'Manzano': 'imagenes/manzano.png',
+            'Naranjo': 'imagenes/naranjo.png',
+            'Peral': 'imagenes/peral.png',
+            'Rosal': 'imagenes/rosal.png',
+            'Orquidero': 'imagenes/orquidero.png',
+            'Cempasuchil': 'imagenes/cempasuchil.png'
+
+        }
+
+        # Lista para plantas
+        self.planta_items = []
+
+        # Parámetros para plantas
+        self.TIEMPO_MINIMO_REPRODUCCION_PLANTAS = 800
+        self.PROBABILIDAD_REPRODUCCION_PLANTAS = 0.1
+        self.DISTANCIA_REPRODUCCION_PLANTAS = 100
 
     def verificar_cazas(self):
         """Verifica y procesa las cazas entre depredadores y presas"""
@@ -189,6 +281,45 @@ class EcosistemaGUI(QMainWindow):
             if presa_cercana:
                 self.realizar_caza(depredador.animal, presa_cercana.animal)
 
+    def crear_plantas_iniciales(self):
+        """Crea las plantas iniciales en el ecosistema"""
+        try:
+            def generar_posicion():
+                return (
+                    random.uniform(50, self.ANCHO_ECOSISTEMA - 50),
+                    random.uniform(50, self.ALTO_ECOSISTEMA - 50)
+                )
+
+            # Crear instancias de plantas
+            plantas = [
+                (Manzano(1.0, 0, generar_posicion(), 100, 100), 'frutal'),
+                (Manzano(1.0, 0, generar_posicion(), 100, 100), 'frutal'),
+                (Naranjo(1.0, 0, generar_posicion(), 100, 100), 'frutal'),
+                (Naranjo(1.0, 0, generar_posicion(), 100, 100), 'frutal'),
+                (Peral(1.0, 0, generar_posicion(), 100, 100), 'frutal'),
+                (Peral(1.0, 0, generar_posicion(), 100, 100), 'frutal'),
+                (Rosal(0.5, 0, generar_posicion(), 100, 100), 'floral'),
+                (Rosal(0.5, 0, generar_posicion(), 100, 100), 'floral'),
+                (Orquidero(0.5, 0, generar_posicion(), 100, 100), 'floral'),
+                (Orquidero(0.5, 0, generar_posicion(), 100, 100), 'floral'),
+                (Cempasuchil(0.5, 0, generar_posicion(), 100, 100), 'floral'),
+                (Cempasuchil(0.5, 0, generar_posicion(), 100, 100), 'floral'),
+
+
+                # Agregar más tipos de plantas según necesites
+            ]
+
+            # Agregar cada planta al ecosistema
+            for planta, tipo in plantas:
+                self.ecosistema.agregar_entidad(planta, tipo)
+                especie = planta.__class__.__name__
+                if especie in self.imagenes_plantas:
+                    item = PlantaGraphicsItem(planta, self.imagenes_plantas[especie])
+                    self.planta_items.append(item)
+
+        except Exception as e:
+            raise Exception(f"Error al crear plantas: {str(e)}")
+
     def realizar_caza(self, depredador: Animal, presa: Animal):
         """Procesa el intento de caza"""
         # Intentar cazar
@@ -198,10 +329,20 @@ class EcosistemaGUI(QMainWindow):
                 self.lbl_estado.setText(
                     f"Estado: {depredador.__class__.__name__} cazó y se alimentó de {presa.__class__.__name__}"
                 )
+                self.registrar_accion(
+                    depredador.__class__.__name__,
+                    "Cazar",
+                    f"Cazó exitosamente a un {presa.__class__.__name__}"
+                )
         else:
             # Caza fallida
             self.lbl_estado.setText(
                 f"Estado: {depredador.__class__.__name__} falló la caza"
+            )
+            self.registrar_accion(
+                depredador.__class__.__name__,
+                "Cazar",
+                "Intento fallido"
             )
             # Hacer que la presa huya
             self.hacer_huir_presa(presa)
@@ -211,6 +352,11 @@ class EcosistemaGUI(QMainWindow):
         # Implementar el método huir si existe en la clase Herbívoro
         if isinstance(presa.animal, Herbivoro):
             presa.animal.huir()
+            self.registrar_accion(
+                presa.__class__.__name__,
+                "Huir",
+                "Escapó de un depredador"
+            )
 
         # Cambiar dirección y aumentar velocidad temporalmente
         presa.direccion = random.uniform(0, 2 * math.pi)
@@ -338,12 +484,30 @@ class EcosistemaGUI(QMainWindow):
                 QMessageBox.critical(self, "Error",
                                      f"No se pudo crear el directorio de imágenes: {str(e)}")
 
+    def registrar_accion(self, animal_tipo: str, accion: str, detalles: str = ""):
+        """Registra una acción en el panel lateral"""
+        timestamp = QTime.currentTime().toString("HH:mm:ss")
+        accion_texto = f"[{timestamp}] {animal_tipo}: {accion}"
+        if detalles:
+            accion_texto += f" - {detalles}"
+
+        self.lista_acciones.insertItem(0, accion_texto)
+
+        # Mantener un límite de acciones mostradas
+        while self.lista_acciones.count() > self.max_acciones:
+            self.lista_acciones.takeItem(self.lista_acciones.count() - 1)
+
     def setup_ui(self):
         try:
             # Widget central
             central_widget = QWidget()
             self.setCentralWidget(central_widget)
-            layout = QVBoxLayout(central_widget)
+
+            # Layout principal horizontal
+            main_layout = QHBoxLayout(central_widget)
+
+            # Layout para la parte principal (izquierda)
+            left_layout = QVBoxLayout()
 
             # Panel superior con información
             info_panel = QHBoxLayout()
@@ -364,14 +528,87 @@ class EcosistemaGUI(QMainWindow):
             self.btn_inicio.clicked.connect(self.iniciar_simulacion)
             control_panel.addWidget(self.btn_inicio)
 
-            # Agregar todo al layout principal
-            layout.addLayout(info_panel)
-            layout.addWidget(self.view)
-            layout.addLayout(control_panel)
+            # Agregar elementos al layout izquierdo
+            left_layout.addLayout(info_panel)
+            left_layout.addWidget(self.view)
+            left_layout.addLayout(control_panel)
+
+            # Crear un splitter para poder ajustar el tamaño del panel lateral
+            splitter = QSplitter(Qt.Orientation.Horizontal)
+
+            # Widget contenedor para la parte izquierda
+            left_widget = QWidget()
+            left_widget.setLayout(left_layout)
+
+            # Agregar widgets al splitter
+            splitter.addWidget(left_widget)
+
+            # Configurar el panel lateral (derecha)
+            right_widget = QWidget()
+            right_layout = QVBoxLayout(right_widget)
+
+            # Etiqueta para el panel lateral
+            lbl_animales = QLabel("Animales Vivos")
+            lbl_animales.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            right_layout.addWidget(lbl_animales)
+
+            # Agregar la lista de animales
+            right_layout.addWidget(self.lista_animales)
+
+            # Separador
+            separator = QFrame()
+            separator.setFrameShape(QFrame.Shape.HLine)
+            separator.setFrameShadow(QFrame.Shadow.Sunken)
+            right_layout.addWidget(separator)
+
+            # Panel de acciones
+            lbl_acciones = QLabel("Registro de Acciones")
+            lbl_acciones.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            right_layout.addWidget(lbl_acciones)
+            right_layout.addWidget(self.lista_acciones)
+
+            # Agregar el widget derecho al splitter
+            splitter.addWidget(right_widget)
+
+            # Establecer las proporciones del splitter
+            splitter.setStretchFactor(0, 3)  # La parte principal ocupa más espacio
+            splitter.setStretchFactor(1, 1)  # El panel lateral ocupa menos espacio
+
+            # Agregar el splitter al layout principal
+            main_layout.addWidget(splitter)
 
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Error al configurar la interfaz: {str(e)}")
             self.close()
+
+    def actualizar_lista_animales(self):
+        """Actualiza la lista de animales vivos en el panel lateral"""
+        self.lista_animales.clear()
+
+        # Diccionario para agrupar animales por especie
+        animales_por_especie = {}
+
+        for item in self.animal_items:
+            if item.animal.estar_vivo:
+                especie = item.animal.__class__.__name__
+                energia = item.animal.nivel_energia
+                if especie not in animales_por_especie:
+                    animales_por_especie[especie] = []
+                animales_por_especie[especie].append(energia)
+
+        # Agregar elementos a la lista agrupados por especie
+        for especie, energias in animales_por_especie.items():
+            # Agregar encabezado de especie
+            self.lista_animales.addItem(f"=== {especie}s ({len(energias)}) ===")
+
+            # Agregar cada animal con su energía
+            for i, energia in enumerate(energias, 1):
+                self.lista_animales.addItem(
+                    f"  {especie} {i} - Energía: {energia:.1f}%"
+                )
+
+            # Agregar espacio entre especies
+            self.lista_animales.addItem("")
 
     def iniciar_simulacion(self):
         try:
@@ -384,6 +621,7 @@ class EcosistemaGUI(QMainWindow):
 
             # Crear y agregar algunos animales de ejemplo
             self.crear_animales_iniciales()
+            self.crear_plantas_iniciales()  # Agregar creación de plantas
 
             # Crear y configurar el timer
             if self.timer is None:
@@ -447,40 +685,64 @@ class EcosistemaGUI(QMainWindow):
             # Verificar cazas antes del movimiento
             self.verificar_cazas()
 
-            # Mover animales
-            for item in self.animal_items:
-                if item.animal.estar_vivo:
-                    item.mover(self.ANCHO_ECOSISTEMA, self.ALTO_ECOSISTEMA)
+            # Lista para almacenar nuevos animales
+            nuevos_animales = []
 
-            # Verificar reproducción
-            self.verificar_reproduccion()
-
-            # Dibujar animales y actualizar estadísticas
-            animales_vivos = {
-                'carnivoros': 0,
-                'herbivoros': 0
-            }
-
-            for item in self.animal_items[:]:
-                if item.animal.estar_vivo:
+            for item in self.planta_items[:]:
+                if item.planta.estar_vivo:
                     pixmap_item = self.scene.addPixmap(item.pixmap)
                     pixmap_item.setPos(item.x, item.y)
-
-                    # Contar por tipo
-                    if isinstance(item.animal, (Leon, Aguila_real)):
-                        animales_vivos['carnivoros'] += 1
-                    else:
-                        animales_vivos['herbivoros'] += 1
                 else:
-                    self.animal_items.remove(item)
+                    self.planta_items.remove(item)
 
-            # Actualizar estadísticas
-            self.mostrar_estadisticas()
+            # Mover animales y verificar reproducción
+            for item in self.animal_items:
+                if item.animal.estar_vivo:
 
-            # Verificar balance del ecosistema
-            self.verificar_balance_ecosistema(animales_vivos)
+                    # Registrar acciones especiales
+                    if isinstance(item.animal, Volador) and random.random() < 0.1:
+                        item.animal.volar()
+                        self.registrar_accion(
+                            item.animal.__class__.__name__,
+                            "Volar",
+                            "Voló por el ecosistema"
+                        )
 
-            self.view.viewport().update()
+                    if isinstance(item.animal, Nadador) and random.random() < 0.1:
+                        item.animal.nadar()
+                        self.registrar_accion(
+                            item.animal.__class__.__name__,
+                            "Nadar",
+                            "Nadó en el ecosistema"
+                        )
+                    # Mover animal
+                    item.mover(self.ANCHO_ECOSISTEMA, self.ALTO_ECOSISTEMA)
+
+                    # Intentar reproducción
+                    otros_animales = [otro.animal for otro in self.animal_items
+                                      if otro != item and otro.animal.estar_vivo]
+                    nueva_cria = item.animal.reproducirse(otros_animales)
+
+                    if nueva_cria:
+                        # Determinar tipo
+                        tipo = 'carnivoro' if isinstance(nueva_cria, (Leon, Aguila_real)) else 'herbivoro'
+                        nuevos_animales.append((nueva_cria, tipo))
+                        self.lbl_estado.setText(f"Estado: Nuevo {nueva_cria.__class__.__name__} ha nacido!")
+                        self.registrar_accion(
+                            item.animal.__class__.__name__,
+                            "Reproducirse",
+                            f"Dio nacimiento a un nuevo {nueva_cria.__class__.__name__}"
+                        )
+
+            # Agregar nuevos animales al ecosistema
+            for animal, tipo in nuevos_animales:
+                self.ecosistema.agregar_entidad(animal, tipo)
+                if animal.__class__.__name__ in self.imagenes_animales:
+                    item = AnimalGraphicsItem(animal, self.imagenes_animales[animal.__class__.__name__])
+                    self.animal_items.append(item)
+
+            # Dibujar animales y actualizar estadísticas
+            self._actualizar_visualizacion()
 
         except Exception as e:
             print(f"Error al actualizar escena: {str(e)}")
@@ -488,6 +750,34 @@ class EcosistemaGUI(QMainWindow):
             QMessageBox.critical(self, "Error",
                                  "Error al actualizar la simulación. La simulación se ha detenido.")
             self.reiniciar_simulacion()
+
+    def _actualizar_visualizacion(self):
+        """Actualiza la visualización de los animales y las estadísticas"""
+        animales_vivos = {
+            'carnivoros': 0,
+            'herbivoros': 0
+        }
+
+        for item in self.animal_items[:]:
+            if item.animal.estar_vivo:
+                pixmap_item = self.scene.addPixmap(item.pixmap)
+                pixmap_item.setPos(item.x, item.y)
+
+                if isinstance(item.animal, (Leon, Aguila_real)):
+                    animales_vivos['carnivoros'] += 1
+                else:
+                    animales_vivos['herbivoros'] += 1
+
+        # Actualizar estadísticas
+        self.mostrar_estadisticas()
+
+        # Actualizar lista de animales
+        self.actualizar_lista_animales()
+
+        # Verificar balance del ecosistema
+        self.verificar_balance_ecosistema(animales_vivos)
+
+        self.view.viewport().update()
 
     def agregar_herbivoros_adicionales(self, cantidad: int):
         """Agrega nuevos herbívoros para mantener el equilibrio"""
@@ -529,6 +819,7 @@ class EcosistemaGUI(QMainWindow):
         self.lbl_estado.setText("Estado: Esperando inicio")
         self.animal_items.clear()
         self.scene.clear()
+        self.lista_animales.clear()
 
     def closeEvent(self, event):
         if self.ecosistema:

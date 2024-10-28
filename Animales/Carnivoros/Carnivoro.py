@@ -8,7 +8,7 @@ class Carnivoro(ABC):
 
     def __init__(self):
         self.tiempo_entre_caza = 0
-        self.TIEMPO_MINIMO_ENTRE_CAZA = 100
+        self.TIEMPO_MINIMO_ENTRE_CAZA = 50
         self.rango_caza = 80  # Rango de caza por defecto
         self.ENERGIA_CAZA = 10  # Energía que gasta al cazar
 

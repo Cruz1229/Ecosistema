@@ -13,7 +13,7 @@ class Leon(Animal, Carnivoro):
         super().__init__(especie, nivelEnergia, velocidad, ubicacion)
         Carnivoro.__init__(self)
         self.rango_caza = 80  # Radio en el que puede detectar presas
-        # self.fuerza_ataque = 70  # Determina la probabilidad de éxito en la caza
+        self.fuerza_ataque = 70  # Determina la probabilidad de éxito en la caza
 
     def _calcular_probabilidad_caza(self, presa: 'Animal'):
         """Calcula la probabilidad de caza exitosa para el león"""

@@ -11,7 +11,7 @@ class Aguila_real(Animal, Volador, Carnivoro):
         Carnivoro.__init__(self)
         self.rango_caza = 120
 
-    def _calcular_probabilidad_caza(self, presa: 'Animal') -> float:
+    def _calcular_probabilidad_caza(self, presa: 'Animal'):
         """Calcula la probabilidad de caza exitosa para el águila"""
         # Especialista en cazar conejos
         if isinstance(presa, Conejo):

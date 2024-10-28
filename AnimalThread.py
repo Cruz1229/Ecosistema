@@ -69,7 +69,7 @@ class AnimalThread(threading.Thread):
             datos={'tipo_animal': self.animal.__class__.__name__}
         )
         self.ecosistema.cola_eventos.put(evento)
-        time.sleep(1)  # Simular tiempo de búsqueda
+        time.sleep(2)  # Simular tiempo de búsqueda
 
     def mover(self):
         """Mueve al animal a una nueva posición"""
@@ -95,7 +95,7 @@ class AnimalThread(threading.Thread):
             datos={'energia_recuperada': 10}
         )
         self.ecosistema.cola_eventos.put(evento)
-        time.sleep(2)
+        time.sleep(4)
 
     def interactuar(self):
         """Interactúa con otros animales cercanos"""
