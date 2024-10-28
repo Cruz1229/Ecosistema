@@ -1,4 +1,4 @@
-from Animales import Animal
+from Animales.Animal import Animal
 
 class Lince(Animal):
     def __init__(self, especie, nivelEnergia, velocidad, ubicacion):

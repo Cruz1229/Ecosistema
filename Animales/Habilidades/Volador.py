@@ -1,7 +1,5 @@
-from abc import ABC
 
-
-class Volador(ABC):
+class Volador():
 
     def volar(self):
         print("Animal volando")

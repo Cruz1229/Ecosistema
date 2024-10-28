@@ -1,4 +1,4 @@
-from Animales import Animal
+from Animales.Animal import Animal
 from Animales.Habilidades.Nadador import Nadador
 from Animales.Habilidades.Volador import Volador
 

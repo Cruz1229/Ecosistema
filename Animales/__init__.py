@@ -1,3 +1,0 @@
-
-class Capibara:
-    pass
