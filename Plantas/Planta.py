@@ -1,12 +1,11 @@
+from abc import ABC, abstractmethod
 from Organismo import Organismo
 
-
-class Planta(Organismo):
+class Planta(Organismo, ABC):  # Agregar ABC aquí
     def __init__(self, altura, edad, ubicacion, nivel_energia, nivel_agua):
+        super().__init__(ubicacion=ubicacion, edad=edad, nivel_energia=nivel_energia)
         self._altura = altura
-        self._edad = edad
         self._nivel_agua = nivel_agua
-        super().__init__(ubicacion, nivel_energia)
 
     @property
     def altura(self):
@@ -21,22 +20,24 @@ class Planta(Organismo):
         return self._nivel_agua
 
     @altura.setter
-    def altura (self, altura):
+    def altura(self, altura):
         self._altura = altura
 
     @edad.setter
-    def edad (self, edad):
+    def edad(self, edad):
         self._edad = edad
 
     @nivel_agua.setter
     def nivel_agua(self, nivel_agua):
-        self._nivel_energia = nivel_agua
+        self._nivel_agua = nivel_agua
 
+    @abstractmethod
     def crecer(self):
-        print("Planta creciendo")
+        pass
 
-    def reproducirse(self):
-        print("Planta reproduciendose")
-
+    @abstractmethod
     def absorber_agua(self):
-        print("absorbiendo agua desde las raíces")
+        pass
+
+    def alimentarse(self):
+        self.absorber_agua()

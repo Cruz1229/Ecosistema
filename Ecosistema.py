@@ -4,7 +4,10 @@ from abc import ABC
 from queue import Queue
 from AnimalThread import AnimalThread
 from Animales.Animal import Animal
+from PlantaThread import PlantaThread
 from Plantas.Planta import Planta
+from Animales.Carnivoros.Carnivoro import Carnivoro
+from Animales.Herbivoros.Herbivoro import Herbivoro
 from dataclasses import dataclass
 
 
@@ -22,9 +25,11 @@ class Ecosistema:
         self.carnivoros: Dict[str, List[Animal]] = {}
         self.herbivoros: Dict[str, List[Animal]] = {}
         self.plantas: Dict[str, List[Planta]] = {}
+        self.frutales: Dict[str, List[Planta]] = {}
+        self.florales: Dict[str, List[Planta]] = {}
 
         # Control de threads
-        self.threads: List[AnimalThread] = []
+        self.threads: List[AnimalThread, PlantaThread] = []
         self.cola_eventos: Queue = Queue()
         self.thread_procesador = threading.Thread(target=self.procesar_eventos)
         self.thread_procesador.daemon = True
@@ -66,11 +71,24 @@ class Ecosistema:
                     self.threads.append(thread)
                     thread.start()
 
-                elif tipo == 'planta':
+
+                elif tipo == 'frutal':
                     especie = entidad.__class__.__name__
-                    if especie not in self.plantas:
-                        self.plantas[especie] = []
-                    self.plantas[especie].append(entidad)
+                    if especie not in self.frutales:
+                        self.frutales[especie] = []
+                    self.frutales[especie].append(entidad)
+                    thread = PlantaThread(entidad, self)
+                    self.threads.append(thread)
+                    thread.start()
+
+                elif tipo == 'floral':
+                    especie = entidad.__class__.__name__
+                    if especie not in self.florales:
+                        self.florales[especie] = []
+                    self.florales[especie].append(entidad)
+                    thread = PlantaThread(entidad, self)
+                    self.threads.append(thread)
+                    thread.start()
 
                 return True
             except Exception as e:
@@ -91,6 +109,15 @@ class Ecosistema:
                         self.procesar_descanso(evento)
                     elif evento.tipo == 'interactuar':
                         self.procesar_interaccion(evento)
+                    #Eventos de plantas
+                    elif evento.tipo == 'absorber_agua':
+                        self.procesar_absorcion_agua(evento)
+                    elif evento.tipo == 'crecer':
+                        self.procesar_crecimiento(evento)
+                    elif evento.tipo == 'generar_frutos':
+                        self.procesar_generacion_frutos(evento)
+                    elif evento.tipo == 'reproducir_planta':
+                        self.procesar_reproduccion_planta(evento)
                 except Exception as e:
                     print(f"Error procesando evento {evento.tipo}: {str(e)}")
             self.cola_eventos.task_done()
@@ -168,6 +195,43 @@ class Ecosistema:
     def calcular_distancia(self, pos1: Tuple[float, float], pos2: Tuple[float, float]) -> float:
         """Calcula la distancia entre dos puntos"""
         return ((pos1[0] - pos2[0])**2 + (pos1[1] - pos2[1])**2)**0.5
+
+    def procesar_absorcion_agua(self, evento: EventoEcosistema):
+        """Procesa la absorción de agua por una planta"""
+        planta = evento.origen
+        cantidad = evento.datos.get('cantidad_requerida', 10)
+
+        if self.recursos['agua'] >= cantidad:
+            self.recursos['agua'] -= cantidad
+            planta.nivel_agua += cantidad
+            print(f"{planta.__class__.__name__} absorbió {cantidad} de agua")
+
+    def procesar_crecimiento(self, evento: EventoEcosistema):
+        """Procesa el crecimiento de una planta"""
+        planta = evento.origen
+        incremento = evento.datos.get('incremento_altura', 0.1)
+
+        if planta.nivel_agua > 20:
+            planta.altura += incremento
+            planta.nivel_agua -= 5
+            print(f"{planta.__class__.__name__} creció {incremento}m")
+
+    def procesar_generacion_frutos(self, evento: EventoEcosistema):
+        """Procesa la generación de frutos"""
+        planta = evento.origen
+        cantidad = evento.datos.get('cantidad', 1)
+
+        if hasattr(planta, 'frutos'):
+            planta.frutos += cantidad
+            print(f"{planta.__class__.__name__} generó {cantidad} frutos")
+
+    def procesar_reproduccion_planta(self, evento: EventoEcosistema):
+        """Procesa la reproducción de una planta"""
+        planta = evento.origen
+        radio = evento.datos.get('radio_dispersion', 30)
+
+        # La lógica de creación de nuevas plantas se maneja en la GUI
+        print(f"{planta.__class__.__name__} intentó reproducirse")
 
     def pausar_simulacion(self):
         """Pausa todos los threads de animales"""

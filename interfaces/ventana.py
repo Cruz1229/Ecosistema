@@ -17,6 +17,13 @@ from Animales.Carnivoros.Leon import Leon
 from Animales.Carnivoros.Aguila_real import Aguila_real
 from Animales.Herbivoros.Conejo import Conejo
 from Animales.Herbivoros.Ciervo import Ciervo
+from Plantas.Florales.Cempasuchil import Cempasuchil
+from Plantas.Florales.Orquidero import Orquidero
+from Plantas.Florales.Rosal import Rosal
+from Plantas.Frutales.Manzano import Manzano
+from Plantas.Frutales.Naranjo import Naranjo
+from Plantas.Frutales.Peral import Peral
+
 
 class AnimalGraphicsItem:
     """Clase para manejar la representación gráfica de cada animal"""
@@ -101,6 +108,44 @@ class AnimalGraphicsItem:
     def y(self):
         return self.animal.ubicacion[1] if self.animal else 0
 
+class PlantaGraphicsItem:
+    """Clase para manejar la representación gráfica de cada planta"""
+    def __init__(self, planta: 'Planta', imagen_path: str):
+        self.planta = planta
+        self.imagen_path = imagen_path
+        self.pixmap = None
+        self.cargar_imagen()
+        self.tiempo_crecimiento = 0
+        self.tiempo_reproduccion = 0
+
+    def cargar_imagen(self):
+        try:
+            if os.path.exists(self.imagen_path):
+                # Escalar según la altura de la planta
+                tamano_base = 30
+                factor_escala = min(2.0, max(1.0, self.planta.altura))
+                tamano = int(tamano_base * factor_escala)
+
+                self.pixmap = QPixmap(self.imagen_path).scaled(
+                    tamano, tamano,
+                    Qt.AspectRatioMode.KeepAspectRatio
+                )
+            else:
+                self.pixmap = QPixmap(30, 30)
+                self.pixmap.fill(QColor(34, 139, 34))  # Verde forestal por defecto
+        except Exception as e:
+            print(f"Error al cargar imagen {self.imagen_path}: {str(e)}")
+            self.pixmap = QPixmap(30, 30)
+            self.pixmap.fill(QColor(0, 255, 0))
+
+    @property
+    def x(self):
+        return self.planta.ubicacion[0] if self.planta else 0
+
+    @property
+    def y(self):
+        return self.planta.ubicacion[1] if self.planta else 0
+
 class EcosistemaGUI(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -159,6 +204,63 @@ class EcosistemaGUI(QMainWindow):
 
         # Verificar directorio de imágenes
         self.verificar_directorio_imagenes()
+
+        self.imagenes_plantas: Dict[str, str] = {
+            'Manzano': 'imagenes/manzano.png',
+            'Naranjo': 'imagenes/naranjo.png',
+            'Peral': 'imagenes/peral.png',
+            'Rosal': 'imagenes/rosal.png',
+            'Orquidero': 'imagenes/orquidero.png',
+            'Cempasuchil': 'imagenes/cempasuchil.png'
+
+        }
+
+        # Lista para plantas
+        self.planta_items = []
+
+        # Parámetros para plantas
+        self.TIEMPO_MINIMO_REPRODUCCION_PLANTAS = 800
+        self.PROBABILIDAD_REPRODUCCION_PLANTAS = 0.1
+        self.DISTANCIA_REPRODUCCION_PLANTAS = 100
+
+    def crear_plantas_iniciales(self):
+        """Crea las plantas iniciales en el ecosistema"""
+        try:
+            def generar_posicion():
+                return (
+                    random.uniform(50, self.ANCHO_ECOSISTEMA - 50),
+                    random.uniform(50, self.ALTO_ECOSISTEMA - 50)
+                )
+
+            # Crear instancias de plantas
+            plantas = [
+                (Manzano(1.0, 0, generar_posicion(), 100, 100), 'frutal'),
+                (Manzano(1.0, 0, generar_posicion(), 100, 100), 'frutal'),
+                (Naranjo(1.0, 0, generar_posicion(), 100, 100), 'frutal'),
+                (Naranjo(1.0, 0, generar_posicion(), 100, 100), 'frutal'),
+                (Peral(1.0, 0, generar_posicion(), 100, 100), 'frutal'),
+                (Peral(1.0, 0, generar_posicion(), 100, 100), 'frutal'),
+                (Rosal(0.5, 0, generar_posicion(), 100, 100), 'floral'),
+                (Rosal(0.5, 0, generar_posicion(), 100, 100), 'floral'),
+                (Orquidero(0.5, 0, generar_posicion(), 100, 100), 'floral'),
+                (Orquidero(0.5, 0, generar_posicion(), 100, 100), 'floral'),
+                (Cempasuchil(0.5, 0, generar_posicion(), 100, 100), 'floral'),
+                (Cempasuchil(0.5, 0, generar_posicion(), 100, 100), 'floral'),
+
+
+                # Agregar más tipos de plantas según necesites
+            ]
+
+            # Agregar cada planta al ecosistema
+            for planta, tipo in plantas:
+                self.ecosistema.agregar_entidad(planta, tipo)
+                especie = planta.__class__.__name__
+                if especie in self.imagenes_plantas:
+                    item = PlantaGraphicsItem(planta, self.imagenes_plantas[especie])
+                    self.planta_items.append(item)
+
+        except Exception as e:
+            raise Exception(f"Error al crear plantas: {str(e)}")
 
     def verificar_cazas(self):
         """Verifica y procesa las cazas entre depredadores y presas"""
@@ -384,8 +486,9 @@ class EcosistemaGUI(QMainWindow):
 
             # Crear y agregar algunos animales de ejemplo
             self.crear_animales_iniciales()
+            self.crear_plantas_iniciales()  # Agregar creación de plantas
 
-            # Crear y configurar el timer
+        # Crear y configurar el timer
             if self.timer is None:
                 self.timer = QTimer()
                 self.timer.timeout.connect(self.actualizar_escena)
@@ -446,6 +549,13 @@ class EcosistemaGUI(QMainWindow):
 
             # Verificar cazas antes del movimiento
             self.verificar_cazas()
+
+            for item in self.planta_items[:]:
+                if item.planta.estar_vivo:
+                    pixmap_item = self.scene.addPixmap(item.pixmap)
+                    pixmap_item.setPos(item.x, item.y)
+                else:
+                    self.planta_items.remove(item)
 
             # Mover animales
             for item in self.animal_items:
@@ -528,6 +638,7 @@ class EcosistemaGUI(QMainWindow):
         self.btn_inicio.setText("Iniciar Simulación")
         self.lbl_estado.setText("Estado: Esperando inicio")
         self.animal_items.clear()
+        self.planta_items.clear()  # Agregar limpieza de plantas
         self.scene.clear()
 
     def closeEvent(self, event):
